@@ -11,7 +11,7 @@ class Config(object):
     evaluate_every = 100
     checkpoint_every = 100
     num_checkpoints = 1
-    num_epochs = 50
+    num_epochs = 10
     right_weight = 10.0
     l2_reg_lambda = 10.0
     allow_soft_placement = True

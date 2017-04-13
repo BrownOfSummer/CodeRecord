@@ -35,7 +35,7 @@ def split_text(path_untrain_r, path_untrain_w):
         w_raw = w_raw[:r_len]
         # Save to never_trained file
         time_filename = datetime.now().strftime('%Y%m%d%H%M%S%f')
-        never_trained_path = os.path.join(dir_for_wrong, time_filename, ".never_trained")
+        never_trained_path = os.path.join(dir_for_wrong, time_filename + ".never_trained")
         with open(never_trained_path, "a") as fp:
             for line in never_trained_w:
                 fp.write("%s\n" % line.strip())

@@ -1,13 +1,13 @@
 #!/usr/bin/python
 #-*- coding:utf-8 -*-
 
-from export_eml import Gen_Emails
+#from export_eml import Gen_Emails
 from filter_common import *
 import traceback, time, threading, math
 import hashlib,os,errno
 from datetime import datetime
 
-from cnn_filter import *
+from cnn_filter_utils import *
 def train(app_config,train_data_list):
     try:
 #         arithmetic_pattern_dict = ['syl','']
@@ -21,7 +21,7 @@ def train(app_config,train_data_list):
             piece_count = 1
         each_piece_length = int(math.ceil(total_count/float(piece_count)))
 
-        print "each_piece_length", each_piece_length
+        #print "each_piece_length", each_piece_length
         thread_list = []
         for i in range(0, piece_count):
             t =threading.Thread(target=excute_train,args=(app_config,train_data_list[i*each_piece_length:(i+1)*each_piece_length]))
@@ -31,13 +31,13 @@ def train(app_config,train_data_list):
         for j in thread_list:
             j.join()
         return "True"
-    except Exception, e:
+    except Exception as e:
         traceback.print_exc()
         return "False"
     
 def excute_train(app_config,train_data_list):
     
-    print "excute_train", train_data_list
+    print("excute_train", train_data_list)
     for train_data_record in train_data_list:
         untrain_dir = app_config.get("EMAIL_DIR") + get_md5_value(train_data_record["id"]) + "/untrain/" 
         training_dir = untrain_dir.replace("/untrain/","/training/")
@@ -72,10 +72,13 @@ def excute_train(app_config,train_data_list):
 
 def run_cnn_train(train_data_record):
     
-    print "excute_train", train_data_record
+    print("excute_train", train_data_record)
     # Get the untrain file
-    path_untrain_r = app_config.get("DATA_DIR") + get_md5_value(train_data_record["id"]) + "/TRUE/untrain" 
-    path_untrain_w = app_config.get("DATA_DIR") + get_md5_value(train_data_record["id"]) + "/FALSE/untrain"
+    #path_untrain_r = app_config.get("DATA_DIR") + get_md5_value(train_data_record["id"]) + "/TRUE/untrain" 
+    path_untrain_r = "/tmp/data_dir/" + get_md5_value(train_data_record["id"]) + "/TRUE/untrain" 
+    #path_untrain_w = app_config.get("DATA_DIR") + get_md5_value(train_data_record["id"]) + "/FALSE/untrain"
+    path_untrain_w = "/tmp/data_dir/" + get_md5_value(train_data_record["id"]) + "/FALSE/untrain"
+    assert os.path.exists(path_untrain_r) and os.path.exists(path_untrain_w)
     # Split to training and never_trained
     split_text(path_untrain_r, path_untrain_w)
     # Generate the vocabulary for mapping, save in ID/vocab
@@ -89,33 +92,41 @@ def run_cnn_train(train_data_record):
     cnn_train(path_training_r, path_training_w)
 
     # Move the model to Model dir
-    model_dir = app_config.get("MODEL_DIR") + get_md5_value(train_data_record["id"])
+    #model_dir = app_config.get("MODEL_DIR") + get_md5_value(train_data_record["id"])
+    model_dir = "/tmp/model_dir/" + get_md5_value(train_data_record["id"])
     if not os.path.exists(model_dir):
         mkdir_p(model_dir)
-    runs_dir = app_config.get("DATA_DIR") + get_md5_value(train_data_record["id"]) + "/runs" 
-    vocab_path = app_config.get("DATA_DIR") + get_md5_value(train_data_record["id"]) + "vocab" 
-    run_sys_command(("mv %s %s")%(runs_dir, model_dir))
-    run_sys_command(("mv %s %s")%(vocab_path, model_dir))
+    #runs_dir = app_config.get("DATA_DIR") + get_md5_value(train_data_record["id"]) + "/runs" 
+    runs_dir = "/tmp/data_dir/" + get_md5_value(train_data_record["id"]) + "/runs" 
+    #vocab_path = app_config.get("DATA_DIR") + get_md5_value(train_data_record["id"]) + "vocab" 
+    vocab_path = "/tmp/data_dir/" + get_md5_value(train_data_record["id"]) + "/vocab" 
+    run_sys_command(("mv -f %s %s")%(runs_dir, model_dir))
+    run_sys_command(("mv -f %s %s")%(vocab_path, model_dir))
 
     # Append training to trained
-    path_trained_r = path_training_r.replace("training","trained")
-    path_trained_w = path_training_w.replace("training","trained")
-    run_sys_command(("cat %s >> %s")%(path_training_r, path_trained_r))
-    run_sys_command(("cat %s >> %s")%(path_training_w, path_trained_w))
+    #path_trained_r = path_training_r.replace("training","trained")
+    #path_trained_w = path_training_w.replace("training","trained")
+    time_string = datetime.now().strftime('%Y%m%d%H%M%S%f')
+    path_trained_r = os.path.join(os.path.dirname(path_training_r), time_string + ".trained")
+    path_trained_w = os.path.join(os.path.dirname(path_training_w), time_string + ".trained")
+    run_sys_command(("cat %s > %s")%(path_training_r, path_trained_r))
+    run_sys_command(("cat %s > %s")%(path_training_w, path_trained_w))
 
     # Remove the untrain file
     run_sys_command(("rm %s %s")%(path_untrain_r, path_untrain_w))
 
- def run_cnn_retrain(train_data_record):
-    
-    print "excute_train", train_data_record
+def run_cnn_retrain(train_data_record):
+    print("excute_retrain", train_data_record)
     # Get the untrain file
-    path_untrain_r = app_config.get("DATA_DIR") + get_md5_value(train_data_record["id"]) + "/TRUE/untrain" 
-    path_untrain_w = app_config.get("DATA_DIR") + get_md5_value(train_data_record["id"]) + "/FALSE/untrain"
+    #path_untrain_r = app_config.get("DATA_DIR") + get_md5_value(train_data_record["id"]) + "/TRUE/untrain" 
+    path_untrain_r = "/tmp/data_dir/" + get_md5_value(train_data_record["id"]) + "/TRUE/untrain" 
+    #path_untrain_w = app_config.get("DATA_DIR") + get_md5_value(train_data_record["id"]) + "/FALSE/untrain"
+    path_untrain_w = "/tmp/data_dir/" + get_md5_value(train_data_record["id"]) + "/FALSE/untrain"
     # Split to training and never_trained
     split_text(path_untrain_r, path_untrain_w)
     # Append the vocabulary for mapping, save in id/vocab
-    model_dir = app_config.get("MODEL_DIR") + get_md5_value(train_data_record["id"])
+    #model_dir = app_config.get("MODEL_DIR") + get_md5_value(train_data_record["id"])
+    model_dir = "/tmp/model_dir/" + get_md5_value(train_data_record["id"])
     append_vocab(model_dir, path_untrain_r, path_untrain_w)
     # Get training file
     #path_training_r = app_config.get("DATA_DIR") + get_md5_value(train_data_record["id"]) + "/TRUE/training" 
@@ -126,21 +137,25 @@ def run_cnn_train(train_data_record):
     cnn_retrain(model_dir, path_training_r, path_training_w)
 
     # Append training to trained
-    path_trained_r = path_training_r.replace("training","trained")
-    path_trained_w = path_training_w.replace("training","trained")
-    run_sys_command(("cat %s >> %s")%(path_training_r, path_trained_r))
-    run_sys_command(("cat %s >> %s")%(path_training_w, path_trained_w))
+    #path_trained_r = path_training_r.replace("training","trained")
+    #path_trained_w = path_training_w.replace("training","trained")
+    time_string = datetime.now().strftime('%Y%m%d%H%M%S%f')
+    path_trained_r = os.path.join(os.path.dirname(path_training_r), time_string + ".trained")
+    path_trained_w = os.path.join(os.path.dirname(path_training_w), time_string + ".trained")
+    run_sys_command(("cat %s > %s")%(path_training_r, path_trained_r))
+    run_sys_command(("cat %s > %s")%(path_training_w, path_trained_w))
 
     # Remove the untrain file
     run_sys_command(("rm %s %s")%(path_untrain_r, path_untrain_w))
         
- def excute_cnn_train(app_config,train_data_list):
-     print train_data_list
+def excute_cnn_train(app_config,train_data_list):
+     print(train_data_list)
      for train_data_record in train_data_list:
-         model_dir = app_config.get("MODEL_DIR") + get_md5_value(train_data_record["id"])
+         #model_dir = app_config.get("MODEL_DIR") + get_md5_value(train_data_record["id"])
+         model_dir = "/tmp/model_dir/" + get_md5_value(train_data_record["id"])
          runs_dir = os.path.join(model_dir, "runs")
          vocab_path = os.path.join(model_dir, "vocab")
          if os.path.exists(runs_dir) and os.path.exists(vocab_path):
              run_cnn_retrain(train_data_record)
-        else:
+         else:
             run_cnn_train(train_data_record)
