@@ -1,0 +1,8 @@
+sudo apt-get install python-setuptools(if not installed easy_installl)
+sudo easy_install PasteDeploy
+sudo easy_install PasteScript
+sudo easy_install waitress
+
+sudo apt-get install sylfilter
+sudo apt-get install bogofilter
+
