@@ -1,0 +1,10 @@
+../sample-to-rect-align/10.jpg
+../sample-to-rect-align/11.jpg
+../sample-to-rect-align/12.jpg
+../sample-to-rect-align/13.jpg
+../sample-to-rect-align/14.jpg
+../sample-to-rect-align/15.jpg
+../sample-to-rect-align/16.jpg
+../sample-to-rect-align/17.jpg
+../sample-to-rect-align/18.jpg
+../sample-to-rect-align/19.jpg

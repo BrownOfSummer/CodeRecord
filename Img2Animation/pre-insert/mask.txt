@@ -1,0 +1,10 @@
+/Users/li_pengju/SomeDownload/Dataset/uray-4v/a/mask/a-10-mask.jpg
+/Users/li_pengju/SomeDownload/Dataset/uray-4v/a/mask/a-11-mask.jpg
+/Users/li_pengju/SomeDownload/Dataset/uray-4v/a/mask/a-12-mask.jpg
+/Users/li_pengju/SomeDownload/Dataset/uray-4v/a/mask/a-13-mask.jpg
+/Users/li_pengju/SomeDownload/Dataset/uray-4v/a/mask/a-14-mask.jpg
+/Users/li_pengju/SomeDownload/Dataset/uray-4v/a/mask/a-15-mask.jpg
+/Users/li_pengju/SomeDownload/Dataset/uray-4v/a/mask/a-16-mask.jpg
+/Users/li_pengju/SomeDownload/Dataset/uray-4v/a/mask/a-17-mask.jpg
+/Users/li_pengju/SomeDownload/Dataset/uray-4v/a/mask/a-18-mask.jpg
+/Users/li_pengju/SomeDownload/Dataset/uray-4v/a/mask/a-19-mask.jpg
