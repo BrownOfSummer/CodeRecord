@@ -1,7 +1,7 @@
 CC=g++
 INCLUDE=$(shell pkg-config --cflags opencv)
 LIBS=$(shell pkg-config --libs opencv)
-BINS=smooth_around_video image_align align_image_list smooth_around align_image_list_masks
+BINS=smooth_around_video image_align align_image_list smooth_around align_image_list_masks crop_zoomin
 OBJS= utils.o
 all:
 	make smooth_around_video
@@ -9,6 +9,7 @@ all:
 	make align_image_list
 	make smooth_around
 	make align_image_list_masks
+	make crop_zoomin
 smooth_around_video: smooth_around_video.o $(OBJS)
 	$(CC) -O3 -o smooth_around_video smooth_around_video.o $(OBJS) $(LIBS)
 image_align: image_align.o
@@ -19,6 +20,8 @@ smooth_around: smooth_around.o
 	$(CC) -O3 -o smooth_around smooth_around.o $(OBJS) $(LIBS)
 align_image_list_masks: align_image_list_masks.o $(OBJS)
 	$(CC) -O3 -o align_image_list_masks align_image_list_masks.o $(OBJS) $(LIBS)
+crop_zoomin: crop_zoomin.o
+	$(CC) -O3 -o crop_zoomin crop_zoomin.o $(LIBS)
 .cpp.o:
 	$(CC) $(INCLUDE) -c $< -o $@
 .c.o:

@@ -131,9 +131,9 @@ int main(int argc, char *argv[])
             cvtColor(im1, roiGray, CV_BGR2GRAY);
             rois.push_back(roiGray.clone());
         }
-        //imshow("rois", roiGray);
-        //imshow("roi-Gradient", GetGradient(roiGray));
-        //waitKey();
+        imshow("rois", roiGray);
+        imshow("roi-Gradient", GetGradient(roiGray));
+        waitKey();
     }
 
     int template_index = (rois.size() + 1) / 2 - 1;
