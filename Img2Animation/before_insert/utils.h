@@ -21,3 +21,4 @@ bool generate_mask(Mat seg_src, Mat &mask, unsigned char mask_value);
 Mat Erosion( Mat src, int erosion_elem, int erosion_size );
 Mat Dilation( Mat src, int dilation_elem, int dilation_size);
 int blurImg(Mat img, int kernel_size, int blur_type);
+void GetVideoInfo(VideoCapture cap, int &video_height, int &video_width, int &total_frames, double &frame_rate);

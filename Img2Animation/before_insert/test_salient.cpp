@@ -1,10 +1,3 @@
-/*************************************************************************
-    > File Name: test_salient.cpp
-    > Author: li_pengju
-    > Mail: li_pengju@vobile.cn 
-    > Copyright (c) Vobile Inc. All Rights Reserved
-    > Created Time: 2017-12-12 16:33:03
- ************************************************************************/
 
 #include<iostream>
 #include<opencv2/opencv.hpp>

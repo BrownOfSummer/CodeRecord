@@ -23,9 +23,12 @@ int main(int argc, char *argv[])
     bool flag = generate_mask(src_gray, mask, 255);
     if( !flag ) return -1;
     else {
+        cout<<"Press s to save the mask, other return.\n";
         imshow("src", src);
         imshow("mask", mask);
-        waitKey();
+        char key = (char)waitKey();
+        if( key == 's' ) imwrite(argv[2], mask);
+        else return 0;
     }
     return 0;
 }

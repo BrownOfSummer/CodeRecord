@@ -146,24 +146,33 @@ int blurImg(Mat img, int kernel_size, int blur_type)
 {
     switch(blur_type){
         case 1:
-            cout<<"Do Homogeneous Blur.\n";
+            //cout<<"Do Homogeneous Blur.\n";
             blur( img, img, Size(kernel_size, kernel_size), Point(-1, -1) );
             break;
         case 2:
-            cout<<"Do Gaussion Blur.\n";
+            //cout<<"Do Gaussion Blur.\n";
             GaussianBlur(img, img, Size(kernel_size, kernel_size), 0, 0);
             break;
         case 3:
-            cout<<"Do Median Blur.\n";
+            //cout<<"Do Median Blur.\n";
             medianBlur(img, img, kernel_size);
             break;
         case 4:
-            cout<<"Do bilateralFilter Blur. \n";
+            //cout<<"Do bilateralFilter Blur. \n";
             bilateralFilter(img, img, kernel_size, kernel_size*2, kernel_size/2 );
         default:
-            cout<<"Do Gaussion Blur for default.\n";
+            //cout<<"Do Gaussion Blur for default.\n";
             GaussianBlur(img, img, Size(kernel_size, kernel_size), 0, 0);
             return -1;
     }
     return 0;
+}
+
+void GetVideoInfo(VideoCapture cap, int &video_height, int &video_width, int &total_frames, double &frame_rate)
+{
+    video_height = cap.get(CV_CAP_PROP_FRAME_HEIGHT);
+    video_width = cap.get(CV_CAP_PROP_FRAME_WIDTH);
+    total_frames = cap.get(CV_CAP_PROP_FRAME_COUNT);
+    frame_rate = cap.get(CV_CAP_PROP_FPS);
+    //double video_length_sec = total_frames / frame_rate;
 }
